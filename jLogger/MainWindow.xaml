@@ -1,0 +1,162 @@
+﻿<Controls:MetroWindow x:Class="jLogger.MainWindow" x:Name="PrimaryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:properties="clr-namespace:jLogger.Properties"
+        xmlns:d3="clr-namespace:Microsoft.Research.DynamicDataDisplay;assembly=DynamicDataDisplay"
+        xmlns:d3e="clr-namespace:Microsoft.Research.DynamicDataDisplay.Charts;assembly=DynamicDataDisplay"
+        xmlns:local="clr-namespace:jLogger"
+        Title="jLogger 0.1a - Joseph Garrone © 2014"
+        Height="768"
+        Width="1024"
+        IsTabStop="False"
+        SnapsToDevicePixels="True"
+        TextOptions.TextRenderingMode="ClearType"
+        ShowTitleBar="True"
+        WindowStartupLocation="CenterScreen" MinHeight="600" MinWidth="800" TitleCaps="False" Loaded="OnLoaded" Closing="OnClosing">
+
+    <Border x:Name="OuterBorder" BorderThickness="3,0,3,3" BorderBrush="{DynamicResource AccentColorBrush}">
+        <Grid x:Name="MainGrid" ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TabControl x:Name="MultimeterTabs">
+                <TabItem Header="Overview">
+
+                    <Grid x:Name="ViewGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" ClipToBounds="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.8*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="0.2*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="300"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" OverridesDefaultStyle="True">
+                                    <StackPanel Name="OverviewList">
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+
+                            <Grid Grid.Column="2">
+                                <d3:ChartPlotter Name="dynamicChart">
+                                    <d3:ChartPlotter.HorizontalAxis>
+                                        <d3e:HorizontalDateTimeAxis>
+                                            
+                                        </d3e:HorizontalDateTimeAxis>
+                                    </d3:ChartPlotter.HorizontalAxis>
+                                    <d3:ChartPlotter.VerticalAxis>
+                                        <d3e:VerticalAxis>
+                                            
+                                        </d3e:VerticalAxis>
+                                    </d3:ChartPlotter.VerticalAxis>
+                                    <d3:HorizontalAxisTitle Content="Time"/>
+                                    <d3:VerticalAxisTitle Content="Value"/>
+                                </d3:ChartPlotter>
+                            </Grid>
+
+                            <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="3" Background="{DynamicResource AccentColorBrush4}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <RichTextBox x:Name="consolas" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" BorderThickness="0" IsReadOnly="True">
+                                <FlowDocument>
+                                    <Paragraph>
+                                        <Run Text=""/>
+                                    </Paragraph>
+                                </FlowDocument>
+                            </RichTextBox>
+                        </Grid>
+
+                        <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="3" Background="{DynamicResource AccentColorBrush4}"/>
+
+                    </Grid>
+                </TabItem>
+                <TabItem Visibility="Collapsed" Header="Add Meter" GotFocus="_AddNewTab" >
+                </TabItem>
+                <TabItem Header="Settings">
+                    <Grid Margin="5, 0, 5, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <TextBlock FontFamily="{DynamicResource DefaultFont}" Foreground="{DynamicResource BlackBrush}" Margin="0, 0, 0, 0" FontWeight="Medium" FontStretch="SemiCondensed">
+                                <Run FontSize="16">A</Run><Run FontSize="12">PPLICATION</Run>
+                                <Run FontSize="16">T</Run><Run FontSize="12">HEME</Run>
+                            </TextBlock>
+                        </Grid>
+                        
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <ComboBox Grid.Column="0" x:Name="ThemeColor" SelectionChanged="ChangeTheme" SelectedIndex="3">
+                                <ComboBoxItem Content="Amber"/>
+                                <ComboBoxItem Content="Blue"/>
+                                <ComboBoxItem Content="Brown"/>
+                                <ComboBoxItem Content="Cobalt"/>
+                                <ComboBoxItem Content="Crimson"/>
+                                <ComboBoxItem Content="Cyan"/>
+                                <ComboBoxItem Content="Emerald"/>
+                                <ComboBoxItem Content="Green"/>
+                                <ComboBoxItem Content="Indigo"/>
+                                <ComboBoxItem Content="Lime"/>
+                                <ComboBoxItem Content="Magenta"/>
+                                <ComboBoxItem Content="Mauve"/>
+                                <ComboBoxItem Content="Olive"/>
+                                <ComboBoxItem Content="Orange"/>
+                                <ComboBoxItem Content="Pink"/>
+                                <ComboBoxItem Content="Purple"/>
+                                <ComboBoxItem Content="Red"/>
+                                <ComboBoxItem Content="Sienna"/>
+                                <ComboBoxItem Content="Steel"/>
+                                <ComboBoxItem Content="Teal"/>
+                                <ComboBoxItem Content="Violet"/>
+                                <ComboBoxItem Content="Yellow"/>
+                            </ComboBox>
+
+                            <ComboBox Grid.Column="1" x:Name="ThemeShade" SelectionChanged="ChangeTheme" SelectedIndex="0" Margin="5, 0, 0, 0">
+                                <ComboBoxItem Content="Light"/>
+                                <ComboBoxItem Content="Dark"/>
+                            </ComboBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="About">
+                    <TextBlock HorizontalAlignment="Center" FontSize="14" TextWrapping="Wrap" TextAlignment="Justify" Width="600">
+                        This is a multimeter data logging program for Tenma multimeters 72-7730,
+                        72-7730A and 72-7732. It may also work with other multimeters that
+                        use the Hoitek CH9325 USB to Serial interface.
+                        <LineBreak/><LineBreak/>
+                        Copyright (C) 2014 Joseph John Garrone
+                        <LineBreak/><LineBreak/>
+                        This program is the property of Joseph John Garrone, and may not be
+                        copied, redistributed or modified in anyway without the express
+                        permission, in writing, by Joseph John Garrone.
+                        <LineBreak/><LineBreak/>
+                        THIS PROGRAM IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY 
+                        KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+                        WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+                        PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+                        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+                        DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+                        CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+                        CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+                        IN THE SOFTWARE.
+                    </TextBlock>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Border>
+</Controls:MetroWindow>

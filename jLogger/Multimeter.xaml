@@ -1,0 +1,346 @@
+﻿<UserControl x:Class="jLogger.Multimeter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:properties="clr-namespace:jLogger.Properties"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:d3="clr-namespace:Microsoft.Research.DynamicDataDisplay;assembly=DynamicDataDisplay"
+             xmlns:d3e="clr-namespace:Microsoft.Research.DynamicDataDisplay.Charts;assembly=DynamicDataDisplay"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000">
+
+    <Grid x:Name="ViewGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" ClipToBounds="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="75"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" MaxWidth="300px"/>
+                <ColumnDefinition Width="0.5*" MaxWidth="280px"/>
+                <ColumnDefinition Width="0.5*" MaxWidth="400px"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="0" HorizontalAlignment="Left">
+                    <TextBlock FontFamily="{DynamicResource DefaultFont}" Margin="10, 0, 0, 0" FontWeight="Medium" FontStretch="SemiCondensed">
+                        <Run FontSize="16">C</Run><Run FontSize="12">ONTROLS</Run>
+                    </TextBlock>
+                </Grid>
+
+                <Grid Grid.Row="2" HorizontalAlignment="Left">
+                    <TextBlock FontFamily="{DynamicResource DefaultFont}" Margin="10, 0, 0, 0" FontWeight="Medium" FontStretch="SemiCondensed">
+                        <Run FontSize="16">R</Run><Run FontSize="12">EALTIME</Run>
+                        <Run FontSize="16">D</Run><Run FontSize="12">ATA</Run>
+                    </TextBlock>
+                </Grid>
+
+                <StackPanel Grid.Row="1" MinHeight="46" Orientation="Horizontal" VerticalAlignment="Top">
+                    <Button x:Name="TogglePollingButton" FontSize="14" FontFamily="{DynamicResource DefaultFont}" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10, 0, 0, 0" Content="Start" Click="TogglePolling" ToolTip="Start logging"/>
+                    <Button VerticalAlignment="Center" FontSize="14" FontFamily="{DynamicResource DefaultFont}" FontWeight="SemiBold" HorizontalAlignment="Left" Content="Clear" Margin="10, 0, 0, 0" Click="RestartPolling" ToolTip="Clear all logged data"/>
+                    <Button VerticalAlignment="Center" FontSize="14" FontFamily="{DynamicResource DefaultFont}" FontWeight="SemiBold" HorizontalAlignment="Left" Content="Save" Margin="10, 0, 0, 0" Click="ExportDataToCSV" ToolTip="Save to CSV"/>
+                    <Button VerticalAlignment="Center" FontSize="14" FontFamily="{DynamicResource DefaultFont}" FontWeight="SemiBold" HorizontalAlignment="Left" Content="Accept Alarm" Margin="10, 0, 0, 0" Click="ExportDataToCSV" ToolTip="Accept"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Top">
+                    <TextBlock Margin="10, 0, 0, 0" FontSize="36" FontFamily="{DynamicResource HeaderFontFamily}" Foreground="{DynamicResource AccentColorBrush}" Text="{Binding DisplayValue}"/>
+                    <TextBlock Margin="10, 0, 0, 0" FontSize="36" FontFamily="{DynamicResource HeaderFontFamily}" Foreground="{DynamicResource AccentColorBrush}" Text="{Binding DisplayUnits}"/>
+                    <Button Visibility="Collapsed" Style="{DynamicResource MetroCircleButtonStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Content="{StaticResource appbar_delete}" Click="RemoveMultimeter" ToolTip="Remove this device"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <TextBlock x:Name="AlarmDisplay" VerticalAlignment="Center" FontSize="14" FontFamily="{DynamicResource DefaultFont}" FontWeight="SemiBold" Margin="0, 2, 0, 0" Padding="2" HorizontalAlignment="Left" Text="NORMAL" Background="LightGreen"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="5, 0, 0, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" HorizontalAlignment="Left">
+                    <TextBlock FontFamily="{DynamicResource DefaultFont}" Margin="5, 0, 0, 0" FontWeight="Medium" FontStretch="SemiCondensed">
+                        <Run FontSize="16">M</Run><Run FontSize="12">ETER</Run>
+                        <Run FontSize="16">S</Run><Run FontSize="12">ETTINGS</Run>
+                    </TextBlock>
+                </Grid>
+                
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="0" Grid.Row="0" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                        Meter device:
+                    </TextBlock>
+
+                    <ComboBox Grid.Column="1" Grid.Row="0" Name="AvailableDevices" Margin="10, 0, 0, 0" Style="{DynamicResource MetroComboBox}" HorizontalAlignment="Stretch" SelectionChanged="ChangeDevice" SelectedIndex="0" MinHeight="22" Height="22">
+                        <ComboBoxItem Name="LoadingDevices" Content="Loading devices..."/>
+                        <ComboBoxItem Name="RefreshDevices" Content="Refresh devices"/>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                        Meter name:
+                    </TextBlock>
+
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="10, 0, 0, 0" Background="#FFF7F7F7" Height="22" MinHeight="22" VerticalAlignment="Center" Text="{Binding DataName}">
+                        
+                    </TextBox>
+                    
+                    <TextBlock Grid.Column="0" Grid.Row="2" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                        Sampling interval:
+                    </TextBlock>
+
+                    <Grid Grid.Column="1" Grid.Row="2" Margin="10, 0, 0, 0" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBox Grid.Column="0" Background="#FFF7F7F7" Height="22" MinHeight="22" VerticalAlignment="Center" PreviewTextInput="TextBoxValueChanged" Text="{Binding TimingInterval}" AllowDrop="False">
+
+                        </TextBox>
+
+                        <TextBlock Grid.Column="1" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                            seconds
+                        </TextBlock>
+                    </Grid>
+
+                    <TextBlock Grid.Column="0" Grid.Row="3" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                        Averaging interval:
+                    </TextBlock>
+                    
+                    <Grid Grid.Column="1" Grid.Row="3" Margin="10, 0, 0, 0" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBox Grid.Column="0" Background="#FFF7F7F7" Height="22" MinHeight="22" VerticalAlignment="Center" PreviewTextInput="TextBoxValueChanged" Text="{Binding AverageInterval}" AllowDrop="False">
+
+                        </TextBox>
+
+                        <TextBlock Grid.Column="1" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                            seconds
+                        </TextBlock>
+                    </Grid>
+
+                    <TextBlock Grid.Column="0" Grid.Row="4" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                        Auto save:
+                    </TextBlock>
+
+                    <ComboBox Grid.Column="1" Grid.Row="4" Margin="10, 0, 0, 0" Style="{DynamicResource MetroComboBox}" HorizontalAlignment="Stretch" MinHeight="22" Height="22" SelectedIndex="{Binding AutoSave}">
+                        <ComboBoxItem Content="Enabled"/>
+                        <ComboBoxItem Content="Disabled"/>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="5" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                        Save file:
+                    </TextBlock>
+                    
+                    <Grid Grid.Column="1" Grid.Row="5" Margin="10, 0, 0, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="FileSaveLocation" Grid.Column="0" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" TextTrimming="CharacterEllipsis">
+                            
+                        </TextBlock>
+
+                        <Button Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Select" Margin="10, 0, 0, 0" Click="ChooseSaveLocation" ToolTip="Select the save file"/>
+                        
+                    </Grid>
+                </Grid>
+                
+            </Grid>
+
+            <Grid Grid.Column="2" Margin="5, 0, 0, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+
+                <Grid Grid.Row="0" HorizontalAlignment="Left">
+                    <TextBlock FontFamily="{DynamicResource DefaultFont}" Margin="10, 0, 0, 0" FontWeight="Medium" FontStretch="SemiCondensed">
+                        <Run FontSize="16">A</Run><Run FontSize="12">LARM</Run>
+                        <Run FontSize="16">S</Run><Run FontSize="12">ETTINGS</Run>
+                    </TextBlock>
+                </Grid>
+
+                <Grid Grid.Row="1" VerticalAlignment="Top" Margin="5, 0, 0, 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                        <RowDefinition MinHeight="24px"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                            Alarm:
+                    </TextBlock>
+
+                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="10, 0, 0, 0" Style="{DynamicResource MetroComboBox}" HorizontalAlignment="Stretch" MinHeight="22" Height="22" SelectedIndex="{Binding Alarm}">
+                        <ComboBoxItem Content="Enabled"/>
+                        <ComboBoxItem Content="Disabled"/>
+                    </ComboBox>
+
+                    <TextBlock Grid.Row="0" Grid.Column="2" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}">
+                            Sound:
+                    </TextBlock>
+
+                    <ComboBox Grid.Row="0" Grid.Column="3" Margin="10, 0, 0, 0" Style="{DynamicResource MetroComboBox}" HorizontalAlignment="Stretch" MinHeight="22" Height="22" SelectedIndex="{Binding Sound}">
+                        <ComboBoxItem Content="Enabled"/>
+                        <ComboBoxItem Content="Disabled"/>
+                    </ComboBox>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" Text="Hi limit:"/>
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Margin="10, 1, 0, 1" Background="#FFF7F7F7" Height="22" MinHeight="22" VerticalAlignment="Center" PreviewTextInput="DoubleValueChanged" Text="{Binding HiLimit}" AllowDrop="False"/>
+                        <TextBlock Grid.Column="1" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" Text="{Binding DisplayUnits}"/>
+                    </Grid>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" Text="Hi release:"/>
+                    <Grid Grid.Row="1" Grid.Column="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Margin="10, 1, 0, 1" Background="#FFF7F7F7" Height="22" MinHeight="22" VerticalAlignment="Center" PreviewTextInput="DoubleValueChanged" Text="{Binding HiRelease}" AllowDrop="False"/>
+                        <TextBlock Grid.Column="1" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" Text="{Binding DisplayUnits}"/>
+                    </Grid>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" Text="Lo limit:"/>
+                    <Grid Grid.Row="2" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Margin="10, 1, 0, 1" Background="#FFF7F7F7" Height="22" MinHeight="22" VerticalAlignment="Center" PreviewTextInput="DoubleValueChanged" Text="{Binding LoLimit}" AllowDrop="False"/>
+                        <TextBlock Grid.Column="1" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" Text="{Binding DisplayUnits}"/>
+                    </Grid>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" Text="Lo release:"/>
+                    <Grid Grid.Row="2" Grid.Column="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Margin="10, 1, 0, 1" Background="#FFF7F7F7" Height="22" MinHeight="22" VerticalAlignment="Center" PreviewTextInput="DoubleValueChanged" Text="{Binding LoRelease}" AllowDrop="False"/>
+                        <TextBlock Grid.Column="1" Margin="5, 1, 0, 1" VerticalAlignment="Center" FontSize="{DynamicResource NormalFontSize}" Text="{Binding DisplayUnits}"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="1" ResizeBehavior="PreviousAndNext" Height="3" Background="{DynamicResource AccentColorBrush4}"/>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <DataGrid Grid.Row="1" x:Name="logTable" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsReadOnly="True">
+                </DataGrid>
+            </Grid>
+
+            <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="3" Background="{DynamicResource AccentColorBrush4}"/>
+
+            <Grid Grid.Column="2">
+                <d3:ChartPlotter Name="dynamicChart">
+                    <d3:ChartPlotter.HorizontalAxis>
+                        <d3e:HorizontalDateTimeAxis>
+
+                        </d3e:HorizontalDateTimeAxis>
+                    </d3:ChartPlotter.HorizontalAxis>
+                    <d3:ChartPlotter.VerticalAxis>
+                        <d3e:VerticalAxis>
+
+                        </d3e:VerticalAxis>
+                    </d3:ChartPlotter.VerticalAxis>
+                    <d3:HorizontalAxisTitle Content="Time"/>
+                    <d3:VerticalAxisTitle Name="VerticalTitle" Content="Unknown"/>
+                </d3:ChartPlotter>
+            </Grid>
+        </Grid>
+
+        <GridSplitter Visibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="3" ResizeBehavior="PreviousAndNext" Height="3" Background="{DynamicResource AccentColorBrush4}"/>
+
+        <Grid Grid.Row="4" Visibility="Visible">
+            <RichTextBox x:Name="consolas" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" BorderThickness="0" IsReadOnly="True">
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text=""/>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+        </Grid>
+    </Grid>
+    <!--<Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <Controls:ToggleSwitch Header="Table auto-scroll" HorizontalAlignment="Stretch" IsChecked="{Binding TableAutoScroll}"></Controls:ToggleSwitch>
+                    <Controls:ToggleSwitch Header="Graph auto-scroll" HorizontalAlignment="Stretch" IsChecked="{Binding GraphAutoScroll}" ></Controls:ToggleSwitch>
+                    <Controls:ToggleSwitch Header="Console auto-scroll" HorizontalAlignment="Stretch" IsChecked="{Binding ConsoleAutoScroll}" ></Controls:ToggleSwitch>
+                    <Label Content="Data logging interval" Margin="5, 0, 0, 0" Foreground="{DynamicResource BlackBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="16" Opacity="0.65" FontWeight="Normal"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Height="Auto" Content="Seconds" Margin="5, 0, 0, 0" Foreground="{DynamicResource BlackBrush}" HorizontalAlignment="Left" VerticalContentAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="14.667" FontWeight="Light"/>
+                        <TextBox Grid.Column="1" Height="25" Width="60" HorizontalAlignment="Right" PreviewTextInput="TextBoxValueChanged" Text="{Binding TimingInterval}" AllowDrop="False"/>
+                    </Grid>
+                    <Label Content="Average interval" Margin="5, 0, 0, 0" Foreground="{DynamicResource BlackBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="16" Opacity="0.65" FontWeight="Normal"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Height="Auto" Content="Seconds" Margin="5, 0, 0, 0" Foreground="{DynamicResource BlackBrush}" HorizontalAlignment="Left" VerticalContentAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="14.667" FontWeight="Light"/>
+                        <TextBox Grid.Column="1" Height="25" Width="60" HorizontalAlignment="Right" PreviewTextInput="TextBoxValueChanged" Text="{Binding AverageInterval}" AllowDrop="False"/>
+                    </Grid>
+                </StackPanel>
+            </Grid>-->
+</UserControl>

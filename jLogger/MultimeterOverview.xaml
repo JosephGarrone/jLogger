@@ -1,0 +1,79 @@
+﻿<UserControl x:Name="Overview" x:Class="jLogger.MultimeterOverview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="clr-namespace:jLogger.Properties"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:d3="clr-namespace:Microsoft.Research.DynamicDataDisplay;assembly=DynamicDataDisplay"
+             xmlns:d3e="clr-namespace:Microsoft.Research.DynamicDataDisplay.Charts;assembly=DynamicDataDisplay"
+             mc:Ignorable="d"
+             d:DesignHeight="110" d:DesignWidth="300" MinWidth="300">
+    <Grid DataContext="{Binding ElementName=Overview}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" FontSize="20" FontFamily="Segoe UI Semilight" Margin="5, 0, 0, 0" Foreground="{DynamicResource AccentColorBrush}" Text="{Binding MeterName}"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Status:" Foreground="{DynamicResource BlackBrush}" Padding="5,2,2,2"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentStatus}" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Elapsed Time:" Foreground="{DynamicResource BlackBrush}" Padding="5,2,2,2"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Name="ElapsedTimeDisplay" Text="" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Good Packets:" Foreground="{DynamicResource BlackBrush}" Padding="5,2,2,2"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding GoodPackets}" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Invalid Packets:" Foreground="{DynamicResource BlackBrush}" Padding="5,2,2,2"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding InvalidPackets}" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+                </Grid>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Current Value:" Foreground="{DynamicResource BlackBrush}" Padding="5,2,2,2"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentValue}" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Current Units:" Foreground="{DynamicResource BlackBrush}" Padding="5,2,2,2"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentUnits}" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Max Value:" Foreground="{DynamicResource BlackBrush}" Padding="5,2,2,2"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MaxValue}" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Min Value:" Foreground="{DynamicResource BlackBrush}" Padding="5,2,2,2"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MinValue}" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+        
+    </Grid>
+</UserControl>
